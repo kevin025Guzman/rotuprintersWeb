@@ -1,5 +1,35 @@
 import './style.css'
 
+// Tema (modo oscuro)
+const THEME_KEY = 'rp_theme'
+const themeToggle = document.querySelector('.theme-toggle')
+
+const getPreferredTheme = () => {
+  const stored = window.localStorage.getItem(THEME_KEY)
+  if (stored === 'dark' || stored === 'light') return stored
+  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+}
+
+const applyTheme = (theme) => {
+  const next = theme === 'dark' ? 'dark' : 'light'
+  document.documentElement.dataset.theme = next
+  if (themeToggle) {
+    themeToggle.setAttribute('aria-label', next === 'dark' ? 'Cambiar a modo claro' : 'Cambiar a modo oscuro')
+    themeToggle.setAttribute('title', next === 'dark' ? 'Modo claro' : 'Modo oscuro')
+  }
+}
+
+applyTheme(getPreferredTheme())
+
+if (themeToggle) {
+  themeToggle.addEventListener('click', () => {
+    const current = document.documentElement.dataset.theme === 'dark' ? 'dark' : 'light'
+    const next = current === 'dark' ? 'light' : 'dark'
+    window.localStorage.setItem(THEME_KEY, next)
+    applyTheme(next)
+  })
+}
+
 // Menú móvil
 const menuToggle = document.querySelector('.menu-toggle')
 const nav = document.querySelector('.nav')

@@ -29,3 +29,68 @@ if (header) {
   }
   window.addEventListener('scroll', handleScroll, { passive: true })
 }
+
+// Carrusel de galería
+const carousel = document.querySelector('.carousel')
+if (carousel) {
+  const track = carousel.querySelector('.carousel-track')
+  const slides = Array.from(carousel.querySelectorAll('.carousel-slide'))
+  const prevBtn = carousel.querySelector('.carousel-btn.prev')
+  const nextBtn = carousel.querySelector('.carousel-btn.next')
+  const dots = Array.from(carousel.querySelectorAll('.carousel-dots .dot'))
+  const viewport = carousel.querySelector('.carousel-viewport')
+
+  if (track && slides.length > 0) {
+    let index = 0
+    let autoplayTimer = null
+
+    const setActiveDot = (i) => {
+      dots.forEach((d, di) => d.classList.toggle('active', di === i))
+    }
+
+    const goTo = (i, { wrap = true } = {}) => {
+      const max = slides.length - 1
+      let next = i
+      if (wrap) {
+        if (next < 0) next = max
+        if (next > max) next = 0
+      } else {
+        next = Math.max(0, Math.min(max, next))
+      }
+      index = next
+      track.style.transform = `translateX(${-index * 100}%)`
+      setActiveDot(index)
+    }
+
+    const startAutoplay = () => {
+      stopAutoplay()
+      autoplayTimer = window.setInterval(() => goTo(index + 1), 4500)
+    }
+
+    const stopAutoplay = () => {
+      if (autoplayTimer) window.clearInterval(autoplayTimer)
+      autoplayTimer = null
+    }
+
+    prevBtn?.addEventListener('click', () => goTo(index - 1))
+    nextBtn?.addEventListener('click', () => goTo(index + 1))
+
+    dots.forEach((dot, di) => {
+      dot.addEventListener('click', () => goTo(di, { wrap: false }))
+    })
+
+    viewport?.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowLeft') goTo(index - 1)
+      if (e.key === 'ArrowRight') goTo(index + 1)
+    })
+
+    carousel.addEventListener('mouseenter', stopAutoplay)
+    carousel.addEventListener('mouseleave', startAutoplay)
+    carousel.addEventListener('focusin', stopAutoplay)
+    carousel.addEventListener('focusout', startAutoplay)
+
+    // Inicializar
+    goTo(0, { wrap: false })
+    startAutoplay()
+  }
+}

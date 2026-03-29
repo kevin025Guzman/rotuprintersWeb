@@ -90,6 +90,7 @@ body {
 .divTitle {
   display: flex;
   flex-direction: column;
+  gap: 0;
 }
 
 .title {
@@ -106,7 +107,7 @@ body {
 }
 
 .subtitle {
-  margin: 0.1rem 0 0;
+  margin: -0.15rem 0 0;
   font-size: 0.9rem;
   color: var(--color-text-muted);
   font-weight: 500;
@@ -395,6 +396,106 @@ body {
   max-width: 560px;
   color: var(--color-text-muted);
   font-size: 1.05rem;
+}
+
+/* ===== GALERÍA (Carrusel) ===== */
+.galeria {
+  padding: 6rem 2rem;
+  background: linear-gradient(180deg, white 0%, var(--color-cream) 100%);
+}
+
+.carousel {
+  position: relative;
+  max-width: 1100px;
+  margin: 3rem auto 0;
+}
+
+.carousel-viewport {
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  box-shadow: var(--shadow-card);
+  outline: none;
+}
+
+.carousel-viewport:focus-visible {
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.35), var(--shadow-card);
+}
+
+.carousel-track {
+  display: flex;
+  transition: transform 450ms cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.carousel-slide {
+  min-width: 100%;
+  aspect-ratio: 16 / 9;
+  background: #0b1220;
+}
+
+.carousel-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  background: rgba(15, 23, 42, 0.55);
+  color: white;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.carousel-btn:hover {
+  background: rgba(15, 23, 42, 0.75);
+  transform: translateY(-50%) scale(1.04);
+}
+
+.carousel-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.carousel-btn.prev {
+  left: 12px;
+}
+
+.carousel-btn.next {
+  right: 12px;
+}
+
+.carousel-dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  border: 0;
+  background: rgba(30, 41, 59, 0.25);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.dot.active {
+  width: 26px;
+  background: var(--color-primary);
 }
 
 .productos-grid {
@@ -744,6 +845,11 @@ body {
   
   .productos-grid {
     grid-template-columns: 1fr;
+  }
+
+  .carousel-btn {
+    width: 40px;
+    height: 40px;
   }
   
   .footer-inner {

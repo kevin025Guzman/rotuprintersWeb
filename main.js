@@ -60,15 +60,16 @@ if (header) {
   window.addEventListener('scroll', handleScroll, { passive: true })
 }
 
-// Carrusel de galería
-const carousel = document.querySelector('.carousel')
-if (carousel) {
+// Carruseles de galería
+const carousels = document.querySelectorAll('.carousel')
+carousels.forEach(carousel => {
   const track = carousel.querySelector('.carousel-track')
   const slides = Array.from(carousel.querySelectorAll('.carousel-slide'))
   const prevBtn = carousel.querySelector('.carousel-btn.prev')
   const nextBtn = carousel.querySelector('.carousel-btn.next')
   const dots = Array.from(carousel.querySelectorAll('.carousel-dots .dot'))
   const viewport = carousel.querySelector('.carousel-viewport')
+  const isReverse = carousel.dataset.reverse === 'false'
 
   if (track && slides.length > 0) {
     let index = 0
@@ -94,7 +95,7 @@ if (carousel) {
 
     const startAutoplay = () => {
       stopAutoplay()
-      autoplayTimer = window.setInterval(() => goTo(index + 1), 3000)
+      autoplayTimer = window.setInterval(() => goTo(isReverse ? index - 1 : index + 1), 3000)
     }
 
     const stopAutoplay = () => {
@@ -123,4 +124,4 @@ if (carousel) {
     goTo(0, { wrap: false })
     startAutoplay()
   }
-}
+})

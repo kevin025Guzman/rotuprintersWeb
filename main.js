@@ -7,7 +7,7 @@ const themeToggle = document.querySelector('.theme-toggle')
 const getPreferredTheme = () => {
   const stored = window.localStorage.getItem(THEME_KEY)
   if (stored === 'dark' || stored === 'light') return stored
-  return window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  return 'light'
 }
 
 const applyTheme = (theme) => {
@@ -94,7 +94,7 @@ if (carousel) {
 
     const startAutoplay = () => {
       stopAutoplay()
-      autoplayTimer = window.setInterval(() => goTo(index + 1), 4500)
+      autoplayTimer = window.setInterval(() => goTo(index + 1), 3000)
     }
 
     const stopAutoplay = () => {

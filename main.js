@@ -7,6 +7,7 @@ import galeriaHTML from './src/components/galeria.html?raw'
 import cotizacionHTML from './src/components/cotizacion.html?raw'
 import contactoHTML from './src/components/contacto.html?raw'
 import footerHTML from './src/components/footer.html?raw'
+import whatsappHTML from './src/components/whatsapp.html?raw'
 
 document.querySelector('#app').innerHTML = `
   ${headerHTML}
@@ -19,6 +20,7 @@ document.querySelector('#app').innerHTML = `
     ${contactoHTML}
   </main>
   ${footerHTML}
+  ${whatsappHTML}
 `;
 
 function init() {
@@ -160,6 +162,41 @@ function init() {
       startAutoplay()
     }
   })
+
+  // WhatsApp Widget logic
+  const waButton = document.getElementById('whatsapp-button');
+  const waPopup = document.getElementById('whatsapp-popup');
+  const waClose = document.getElementById('whatsapp-close');
+  const waForm = document.getElementById('whatsapp-form');
+  const waInput = document.getElementById('whatsapp-input');
+  const waTime = document.getElementById('whatsapp-time');
+
+  if (waButton && waPopup && waClose) {
+    waButton.addEventListener('click', () => {
+      const isHidden = waPopup.style.display === 'none' || waPopup.style.display === '';
+      waPopup.style.display = isHidden ? 'flex' : 'none';
+      if (isHidden && waTime && !waTime.textContent) {
+        const now = new Date();
+        waTime.textContent = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+      }
+    });
+
+    waClose.addEventListener('click', () => {
+      waPopup.style.display = 'none';
+    });
+    
+    if (waForm) {
+      waForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const msg = waInput.value.trim();
+        const phone = '50494491387'; 
+        const url = `https://api.whatsapp.com/send?phone=${phone}&text=${encodeURIComponent(msg || "Hola, me gustaría más información.")}`;
+        window.open(url, '_blank');
+        waPopup.style.display = 'none';
+        waInput.value = '';
+      });
+    }
+  }
 }
 
 // Ejecutar inicialización luego de inyectar los componentes

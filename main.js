@@ -89,9 +89,22 @@ function init() {
     const slides = Array.from(carousel.querySelectorAll('.carousel-slide'))
     const prevBtn = carousel.querySelector('.carousel-btn.prev')
     const nextBtn = carousel.querySelector('.carousel-btn.next')
-    const dots = Array.from(carousel.querySelectorAll('.carousel-dots .dot'))
+    const dotsContainer = carousel.querySelector('.carousel-dots')
     const viewport = carousel.querySelector('.carousel-viewport')
     const isReverse = carousel.dataset.reverse === 'true'
+
+    if (dotsContainer && slides.length > 0) {
+      dotsContainer.innerHTML = '';
+      slides.forEach((_, i) => {
+        const btn = document.createElement('button');
+        btn.className = `dot ${i === 0 ? 'active' : ''}`;
+        btn.type = 'button';
+        btn.setAttribute('aria-label', `Ir a foto ${i + 1}`);
+        dotsContainer.appendChild(btn);
+      });
+    }
+    
+    const dots = Array.from(carousel.querySelectorAll('.carousel-dots .dot'))
 
     if (track && slides.length > 0) {
       let index = 0

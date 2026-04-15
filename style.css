@@ -554,6 +554,7 @@ html[data-theme="dark"] .galeria {
 .carousel-dots {
   display: flex;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
 }

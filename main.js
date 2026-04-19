@@ -7,6 +7,8 @@ import galeriaHTML from './src/components/galeria.html?raw'
 import cotizacionHTML from './src/components/cotizacion.html?raw'
 import contactoHTML from './src/components/contacto.html?raw'
 import footerHTML from './src/components/footer.html?raw'
+import whatsappHTML from './src/components/whatsapp.html?raw'
+
 document.querySelector('#app').innerHTML = `
   ${headerHTML}
   <main>
@@ -18,6 +20,7 @@ document.querySelector('#app').innerHTML = `
     ${contactoHTML}
   </main>
   ${footerHTML}
+  ${whatsappHTML}
 `;
 
 function init() {
@@ -159,6 +162,75 @@ function init() {
       startAutoplay()
     }
   })
+
+  // Inicializar WhatsApp Widget
+  const whatsappBubble = document.getElementById('whatsapp-bubble');
+  const whatsappWindow = document.getElementById('whatsapp-window');
+  const whatsappClose = document.getElementById('whatsapp-close');
+  const whatsappStatusText = document.getElementById('whatsapp-status-text');
+  const whatsappStatusIndicator = document.getElementById('whatsapp-status-indicator');
+  const whatsappTime = document.getElementById('whatsapp-time');
+
+  if (whatsappBubble && whatsappWindow && whatsappClose) {
+    whatsappBubble.addEventListener('click', () => {
+      whatsappWindow.classList.toggle('open');
+    });
+
+    whatsappClose.addEventListener('click', () => {
+      whatsappWindow.classList.remove('open');
+    });
+
+    function formatTime(date) {
+      let hours = date.getHours();
+      let minutes = date.getMinutes();
+      const ampm = hours >= 12 ? 'pm' : 'am';
+      hours = hours % 12;
+      hours = hours ? hours : 12; 
+      minutes = minutes < 10 ? '0' + minutes : minutes;
+      return hours + ':' + minutes + ' ' + ampm;
+    }
+
+    function updateWhatsAppStatus() {
+      const now = new Date();
+      // Calculate Central America Time (UTC-6)
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const hnTime = new Date(utc + (3600000 * -6));
+      
+      const day = hnTime.getDay();
+      const currentTime = hnTime.getHours() * 60 + hnTime.getMinutes();
+      
+      let isOnline = false;
+
+      if (day >= 1 && day <= 5) {
+        // Mon-Fri: 8:00 AM - 5:45 PM
+        const startTime = 8 * 60;
+        const endTime = 17 * 60 + 45;
+        if (currentTime >= startTime && currentTime < endTime) {
+          isOnline = true;
+        }
+      } else if (day === 6) {
+        // Sat: 8:00 AM - 2:00 PM
+        const startTime = 8 * 60;
+        const endTime = 14 * 60;
+        if (currentTime >= startTime && currentTime < endTime) {
+          isOnline = true;
+        }
+      }
+
+      if (whatsappTime) whatsappTime.textContent = formatTime(hnTime);
+
+      if (isOnline) {
+        if (whatsappStatusText) whatsappStatusText.textContent = "Online";
+        if (whatsappStatusIndicator) whatsappStatusIndicator.classList.remove('offline');
+      } else {
+        if (whatsappStatusText) whatsappStatusText.textContent = "Offline";
+        if (whatsappStatusIndicator) whatsappStatusIndicator.classList.add('offline');
+      }
+    }
+
+    updateWhatsAppStatus();
+    setInterval(updateWhatsAppStatus, 60000);
+  }
 }
 
 // Ejecutar inicialización luego de inyectar los componentes

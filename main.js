@@ -84,6 +84,36 @@ function init() {
     window.addEventListener('scroll', handleScroll, { passive: true })
   }
 
+  // Generar galería dinámicamente escaneando la carpeta /public/galeria/
+  const galleryModules = import.meta.glob('/public/galeria/*.{jpg,jpeg,png,webp,JPG,PNG,WEBP}', { eager: true });
+  const galleryImages = Object.keys(galleryModules)
+    .map(path => path.replace('/public', ''))
+    .sort((a, b) => {
+      const numA = parseInt(a.replace(/[^0-9]/g, '')) || 0;
+      const numB = parseInt(b.replace(/[^0-9]/g, '')) || 0;
+      return numA - numB;
+    });
+
+  const track1 = document.getElementById('gallery-track-1');
+  const track2 = document.getElementById('gallery-track-2');
+
+  if (track1 && galleryImages.length > 0) {
+    track1.innerHTML = galleryImages.map(src => `
+      <div class="carousel-slide">
+        <img src="${src}" alt="Instalaciones RotuPrinters" loading="lazy" />
+      </div>
+    `).join('');
+  }
+
+  if (track2 && galleryImages.length > 0) {
+    const reversedImages = [...galleryImages].reverse();
+    track2.innerHTML = reversedImages.map(src => `
+      <div class="carousel-slide">
+        <img src="${src}" alt="Instalaciones RotuPrinters" loading="lazy" />
+      </div>
+    `).join('');
+  }
+
   // Carruseles de galería
   const carousels = document.querySelectorAll('.carousel')
   carousels.forEach(carousel => {

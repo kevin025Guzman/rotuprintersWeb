@@ -49,4 +49,27 @@
     <div class="carousel-dots" role="tablist" aria-label="Seleccionar foto">
     </div>
   </div>
+
+  <!-- Lightbox Modal para vista completa y deslizamiento -->
+  <div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightbox-close" aria-label="Cerrar vista completa">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M18 6L6 18M6 6l12 12" />
+      </svg>
+    </button>
+    <button class="lightbox-btn prev" id="lightbox-prev" aria-label="Imagen anterior">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M15 18l-6-6 6-6" />
+      </svg>
+    </button>
+    <div class="lightbox-content" id="lightbox-content">
+      <img id="lightbox-img" src="" alt="Trabajo RotuPrinters" />
+      <span class="lightbox-counter" id="lightbox-counter"></span>
+    </div>
+    <button class="lightbox-btn next" id="lightbox-next" aria-label="Imagen siguiente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <path d="M9 18l6-6-6-6" />
+      </svg>
+    </button>
+  </div>
 </section>

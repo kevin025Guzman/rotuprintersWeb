@@ -193,6 +193,92 @@ function init() {
     }
   })
 
+  // Lógica del Lightbox (Pantalla completa y Deslizar en móvil/PC)
+  const lightbox = document.getElementById('lightbox');
+  const lightboxImg = document.getElementById('lightbox-img');
+  const lightboxCounter = document.getElementById('lightbox-counter');
+  const lightboxClose = document.getElementById('lightbox-close');
+  const lightboxPrev = document.getElementById('lightbox-prev');
+  const lightboxNext = document.getElementById('lightbox-next');
+
+  if (lightbox && lightboxImg && galleryImages.length > 0) {
+    let currentIndex = 0;
+
+    const showLightboxImage = (index) => {
+      currentIndex = (index + galleryImages.length) % galleryImages.length;
+      lightboxImg.src = galleryImages[currentIndex];
+      if (lightboxCounter) {
+        lightboxCounter.textContent = `${currentIndex + 1} / ${galleryImages.length}`;
+      }
+    };
+
+    const openLightbox = (src) => {
+      const foundIdx = galleryImages.indexOf(src);
+      showLightboxImage(foundIdx !== -1 ? foundIdx : 0);
+      lightbox.classList.add('active');
+      lightbox.setAttribute('aria-hidden', 'false');
+      document.body.style.overflow = 'hidden';
+    };
+
+    const closeLightbox = () => {
+      lightbox.classList.remove('active');
+      lightbox.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+    };
+
+    // Al hacer clic en cualquier imagen de la galería
+    document.querySelectorAll('.carousel-slide img').forEach(img => {
+      img.addEventListener('click', (e) => {
+        const src = e.target.getAttribute('src');
+        openLightbox(src);
+      });
+    });
+
+    lightboxClose?.addEventListener('click', closeLightbox);
+
+    lightboxPrev?.addEventListener('click', () => {
+      showLightboxImage(currentIndex - 1);
+    });
+
+    lightboxNext?.addEventListener('click', () => {
+      showLightboxImage(currentIndex + 1);
+    });
+
+    lightbox.addEventListener('click', (e) => {
+      if (e.target === lightbox || e.target.id === 'lightbox-content') {
+        closeLightbox();
+      }
+    });
+
+    // Navegación con teclado
+    window.addEventListener('keydown', (e) => {
+      if (!lightbox.classList.contains('active')) return;
+      if (e.key === 'Escape') closeLightbox();
+      if (e.key === 'ArrowLeft') showLightboxImage(currentIndex - 1);
+      if (e.key === 'ArrowRight') showLightboxImage(currentIndex + 1);
+    });
+
+    // Soporte para deslizar (Swipe) en pantallas táctiles / móviles
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    lightbox.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    lightbox.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      const diff = touchEndX - touchStartX;
+      if (Math.abs(diff) > 40) {
+        if (diff < 0) {
+          showLightboxImage(currentIndex + 1);
+        } else {
+          showLightboxImage(currentIndex - 1);
+        }
+      }
+    }, { passive: true });
+  }
+
   // Inicializar WhatsApp Widget
   const whatsappBubble = document.getElementById('whatsapp-bubble');
   const whatsappWindow = document.getElementById('whatsapp-window');
